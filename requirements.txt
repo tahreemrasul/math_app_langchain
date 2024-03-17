@@ -1,0 +1,9 @@
+langchain-groq
+langchain
+langchain_community
+langchain-openai
+chainlit
+nbconvert
+python-dotenv
+numexpr
+wikipedia
