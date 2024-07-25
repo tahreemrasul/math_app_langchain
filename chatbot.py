@@ -1,14 +1,14 @@
 import chainlit as cl
 from langchain_openai import OpenAI
-from langchain.chains import LLMMathChain, LLMChain
+from langchain.chains import LLMMathChain
 from langchain.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 from langchain_community.utilities import WikipediaAPIWrapper
 from langchain.agents.agent_types import AgentType
 from langchain.agents import Tool, initialize_agent
 from dotenv import load_dotenv
 
 load_dotenv()
-
 
 @cl.on_chat_start
 def math_chatbot():
@@ -23,11 +23,12 @@ def math_chatbot():
         input_variables=["question"],
         template=word_problem_template
     )
-
-    word_problem_chain = LLMChain(llm=llm,
-                                  prompt=math_assistant_prompt)
+    
+    # Create the RunnableSequence
+    word_problem_chain = math_assistant_prompt | llm | StrOutputParser()
+    
     word_problem_tool = Tool.from_function(name="Reasoning Tool",
-                                           func=word_problem_chain.run,
+                                           func=word_problem_chain.ainvoke,
                                            description="Useful for when you need to answer logic-based/reasoning  "
                                                        "questions.",
                                         )
@@ -53,7 +54,7 @@ def math_chatbot():
         tools=[wikipedia_tool, math_tool, word_problem_tool],
         llm=llm,
         agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-        verbose=False,
+        verbose=True,
         handle_parsing_errors=True
     )
     cl.user_session.set("agent", agent)
