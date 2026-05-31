@@ -1,0 +1,27 @@
+spec_version: "0.1.0"
+name: math-wiz
+version: 1.0.0
+description: >
+  Math Wiz is a LangChain-powered conversational agent that solves arithmetic,
+  logic-based reasoning, and general knowledge questions. It uses a three-tool
+  architecture — a Calculator (LLMMathChain for numeric expressions), a
+  Reasoning Tool (LLMChain for logic/word problems), and Wikipedia — routing
+  each user query to the right tool via a ZERO_SHOT_REACT_DESCRIPTION strategy.
+  The agent runs as a Chainlit web chat application and is backed by OpenAI's
+  GPT models.
+license: MIT
+model:
+  preferred: openai:gpt-3.5-turbo-instruct
+skills:
+  - name: calculator
+    description: Evaluates numeric math expressions using LLMMathChain.
+  - name: reasoning
+    description: Solves logic-based and word problems step-by-step in bullet points.
+  - name: wikipedia-lookup
+    description: Searches Wikipedia for world events, dates, and general knowledge.
+runtime:
+  max_turns: 50
+compliance:
+  risk_tier: standard
+  supervision:
+    human_in_the_loop: none
